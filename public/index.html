@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotmail OAuth OTP Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Hotmail OAuth OTP Viewer</h1>
+        <p>Enter your accounts below in format: <code>email|password|refresh_token|client_id</code></p>
+    </header>
+
+    <div class="glass-card input-section">
+        <textarea id="accountInput" placeholder="example@hotmail.com|pass|req_...|client_id_..."></textarea>
+        <button id="fetchBtn" onclick="fetchOtps()">Get OTPs</button>
+    </div>
+
+    <div class="glass-card results-section">
+        <div id="loader" class="hidden">Processing...</div>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>OTP Code</th>
+                    <th>Subject</th>
+                    <th>Sender</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+                <!-- Results will appear here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
