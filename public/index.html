@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,38 +8,140 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="container">
-    <header>
-        <h1>Hotmail OAuth OTP Viewer</h1>
-        <p>Enter your accounts below in format: <code>email|password|refresh_token|client_id</code></p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>Hotmail OAuth OTP Viewer</h1>
+            <p>Enter your accounts below:</p>
+        </header>
 
-    <div class="glass-card input-section">
-        <textarea id="accountInput" placeholder="example@hotmail.com|pass|req_...|client_id_..."></textarea>
-        <button id="fetchBtn" onclick="fetchOtps()">Get OTPs</button>
+        <div class="glass-card input-section">
+            <textarea id="accountInput" placeholder="example@hotmail.com|pass|req_...|client_id_..."></textarea>
+            <!-- hidden initially, button moved to parsed section -->
+            <button id="fetchBtn" onclick="fetchOtps()" style="display: none;">Get OTPs</button>
+            <div id="inputWarning" class="hidden">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Invalid format.
+            </div>
+        </div>
+
+        <!-- Parsed Data Preview Section -->
+        <div id="parsedDataSection" class="glass-card hidden">
+            <div class="parsed-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <h3>Parsed Account Data</h3>
+            </div>
+
+            <div class="data-row">
+                <div class="data-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <div class="data-content">
+                    <span class="data-label">Email</span>
+                    <span id="previewEmail" class="data-value">user@example.com</span>
+                </div>
+                <button class="copy-btn-sm" onclick="copyText('previewEmail')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="data-row">
+                <div class="data-icon" style="background: rgba(255, 165, 2, 0.1); color: #ffa502;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffa502" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <div class="data-content">
+                    <span class="data-label">Password</span>
+                    <span id="previewPassword" class="data-value password-mask">••••••••</span>
+                </div>
+                <button class="action-btn" onclick="togglePasswordVisibility()">
+                    <svg id="passEyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+                <button class="copy-btn-sm" onclick="copyText('previewPassword')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="data-row">
+                <div class="data-icon" style="background: rgba(162, 155, 254, 0.1); color: #a29bfe;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a29bfe" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </div>
+                <div class="data-content">
+                    <span class="data-label">Client ID</span>
+                    <span id="previewClientId" class="data-value">client_id_value</span>
+                </div>
+                <button class="copy-btn-sm" onclick="copyText('previewClientId')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <button id="mainFetchBtn" onclick="fetchOtps()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: bottom;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Get OTP Code
+            </button>
+        </div>
+
+        <div class="glass-card results-section">
+            <div id="loader" class="hidden">Processing...</div>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>OTP Code</th>
+                        <th>Subject</th>
+                        <th>Sender</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <!-- Results will appear here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="glass-card results-section">
-        <div id="loader" class="hidden">Processing...</div>
-        <table id="resultsTable">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>OTP Code</th>
-                    <th>Subject</th>
-                    <th>Sender</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody id="resultsBody">
-                <!-- Results will appear here -->
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
